@@ -1,1 +1,123 @@
-<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Test Folder</title><style>body{font:16px system-ui;max-width:800px;margin:40px auto;padding:0 18px;color:#17233b}a{color:#11856d}li{margin:14px 0}</style></head><body><h1>🗂️ Test Folder</h1><p>Practice tests for Grade 8 Maths.</p><ul><li><a href="test-1-algebra-basics-and-sign-rules.html">Test 1 — Algebra Basics and Sign Rules</a></li></ul><p><a href="../upcoming-tests/">View upcoming tests (Tests 2–11) →</a></p><p><a href="../index.html">← Back to Study Hub</a></p></body></html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Maths Tests | Grade 8 Study Hub</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;color:#202744;background:linear-gradient(135deg,#fff0e5,#eeedff);min-height:100vh}
+header{padding:22px 7%;background:white;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;box-shadow:0 4px 20px #18204410}
+.logo{font-size:21px;font-weight:800;color:#6558f5}
+nav a{margin-left:15px;text-decoration:none;color:#515b76;font-weight:bold}
+nav a:hover{color:#6558f5}
+main{max-width:1150px;margin:auto;padding:45px 20px}
+h1{font-size:clamp(32px,5vw,48px);margin:12px 0;letter-spacing:-1.5px}
+p{color:#69738a;line-height:1.7}
+.pill{display:inline-block;background:#ffe5d0;color:#a34e10;border-radius:30px;padding:8px 13px;font-size:12px;font-weight:bold}
+.controls{display:flex;gap:12px;flex-wrap:wrap;margin:28px 0}
+input{flex:1;min-width:200px;padding:15px;border:1px solid #dfe3ef;border-radius:13px;font-size:16px;outline:none}
+input:focus{border-color:#6558f5;box-shadow:0 0 0 3px #6558f520}
+button{cursor:pointer;border:0;border-radius:12px;padding:12px 16px;background:white;color:#555d75;font-weight:bold}
+button.active,button:hover{background:#6558f5;color:white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
+.card{background:white;border:1px solid #e5e7f0;border-radius:20px;padding:24px;box-shadow:0 8px 25px #22274b08;transition:.25s;display:flex;flex-direction:column}
+.card:hover{transform:translateY(-7px);box-shadow:0 16px 35px #5145a51c}
+.icon{font-size:36px}
+.tag{display:inline-block;margin-top:12px;color:#a34e10;background:#fff0dc;padding:6px 10px;border-radius:20px;font-size:12px;font-weight:bold}
+.card h2{font-size:22px}
+.card p{flex:1}
+.open{display:inline-block;text-align:center;padding:12px;background:#6558f5;color:white;border-radius:11px;text-decoration:none;font-weight:bold}
+.open:hover{background:#4c40d5}
+.done{background:#e0f8ed;color:#087e55}
+.empty{display:none;text-align:center;padding:35px;color:#69738a}
+footer{text-align:center;padding:25px;color:#707991}
+</style>
+</head>
+<body>
+<header>
+  <a class="logo" href="../index.html" style="text-decoration:none">∑ Maths Hub</a>
+  <nav>
+    <a href="../index.html">Home</a>
+    <a href="../notes/index.html">Notes</a>
+    <a href="index.html">Tests</a>
+  </nav>
+</header>
+
+<main>
+<span class="pill">🎯 PRACTISE • CHECK • IMPROVE</span>
+<h1>Ready for a <span style="color:#6558f5">challenge?</span></h1>
+<p>Choose a test, practise your maths skills, and mark your progress when you're done.</p>
+
+<div class="controls">
+  <input id="search" type="search" placeholder="🔍 Search tests or topics..." oninput="filterCards()">
+  <button class="active" onclick="setFilter('all',this)">All</button>
+  <button onclick="setFilter('algebra',this)">Algebra</button>
+  <button onclick="setFilter('revision',this)">Revision</button>
+</div>
+
+<div id="cards" class="grid">
+  <article class="card" data-type="algebra">
+    <div class="icon">🧠</div>
+    <span class="tag">TEST 01</span>
+    <h2>Algebra Basics &amp; Sign Rules</h2>
+    <p>Practise algebraic expressions, multiplication signs, and positive and negative numbers.</p>
+    <a class="open" href="test-1-algebra-basics-and-sign-rules.html">Start Test →</a>
+    <button id="doneBtn" style="margin-top:12px" onclick="toggleDone()">✓ Mark as completed</button>
+  </article>
+
+  <article class="card" data-type="revision">
+    <div class="icon">📚</div>
+    <span class="tag">STUDY FIRST</span>
+    <h2>Revision Notes</h2>
+    <p>Review your notes before trying the practice test again.</p>
+    <a class="open" href="../notes/index.html">Explore Notes →</a>
+  </article>
+</div>
+
+<div id="empty" class="empty">No tests found. Try another search.</div>
+</main>
+
+<footer>Grade 8 Maths Study Hub • Practice makes progress 🚀</footer>
+
+<script>
+let selectedFilter="all";
+
+function setFilter(type,button){
+  selectedFilter=type;
+  document.querySelectorAll(".controls button").forEach(b=>b.classList.remove("active"));
+  button.classList.add("active");
+  filterCards();
+}
+
+function filterCards(){
+  const query=document.getElementById("search").value.toLowerCase();
+  let count=0;
+  document.querySelectorAll("#cards .card").forEach(card=>{
+    const matchesText=card.innerText.toLowerCase().includes(query);
+    const matchesType=selectedFilter==="all"||card.dataset.type===selectedFilter;
+    card.style.display=matchesText&&matchesType?"flex":"none";
+    if(matchesText&&matchesType)count++;
+  });
+  document.getElementById("empty").style.display=count?"none":"block";
+}
+
+function toggleDone(){
+  const key="grade8-test1-completed";
+  const done=localStorage.getItem(key)==="yes";
+  if(done)localStorage.removeItem(key);
+  else localStorage.setItem(key,"yes");
+  updateDone();
+}
+
+function updateDone(){
+  const done=localStorage.getItem("grade8-test1-completed")==="yes";
+  const button=document.getElementById("doneBtn");
+  button.textContent=done?"✓ Completed! Click to undo":"✓ Mark as completed";
+  button.classList.toggle("done",done);
+}
+updateDone();
+</script>
+</body>
+</html>
