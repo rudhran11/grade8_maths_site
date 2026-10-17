@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Basics & Fundamentals Test — Proportional Reasoning</title>
+<style>
+:root{--bg:#f4f7fb;--card:#fff;--ink:#172033;--muted:#5d687d;--accent:#2457d6;--line:#dfe6f0;--soft:#eaf0ff}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;line-height:1.55}
+header{background:linear-gradient(135deg,#153e9b,#4779ed);color:white;padding:30px 18px}
+.wrap{max-width:920px;margin:auto}h1{margin:0 0 6px;font-size:clamp(1.6rem,4vw,2.2rem)}header p{margin:0;opacity:.94}
+main{padding:22px 15px 45px}.panel{background:white;border:1px solid var(--line);border-radius:15px;padding:18px;margin-bottom:16px}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}.pill{background:var(--soft);color:var(--accent);padding:5px 10px;border-radius:999px;font-size:.9rem}
+.progress{height:8px;background:#e6ebf5;border-radius:20px;overflow:hidden;margin:12px 0}.progress div{height:100%;width:0;background:var(--accent);transition:width .2s}
+.q{border:1px solid var(--line);border-radius:12px;padding:13px 15px;margin:12px 0;background:white}.q legend{font-weight:700;padding:0 4px}.q label{display:block;padding:5px 4px;cursor:pointer}.q input{margin-right:8px}
+button{border:0;border-radius:10px;padding:11px 15px;font:inherit;cursor:pointer;background:var(--accent);color:white}button.secondary{background:#e6ebf5;color:var(--ink)}button:disabled{opacity:.5;cursor:not-allowed}
+.muted{color:var(--muted);font-size:.92rem}.result{padding:15px;border-radius:12px;background:#eef8f2;border:1px solid #bce3ca}.hidden{display:none}.small{font-size:.85rem}
+table{width:100%;border-collapse:collapse}th,td{text-align:left;border-bottom:1px solid var(--line);padding:9px 7px;font-size:.92rem}
+@media print{header{background:white;color:black;padding:10px 0}.no-print{display:none!important}body{background:white}.panel,.q{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><h1>Proportional Reasoning</h1><p>Basics &amp; Fundamentals Test · Class 8 Mathematics</p></div></header>
+<main class="wrap">
+  <section class="panel">
+    <div class="row"><span class="pill">30 questions</span><span class="pill">30 marks</span><span class="pill">Instant result</span></div>
+    <p>This standalone test covers ratios, equivalent ratios, sharing in a ratio, unitary method, direct and inverse proportion, work-rate problems, pie charts, and map scales.</p>
+    <p class="muted">Temporary storage: your result is saved in this browser's session storage for this tab/session. It is not uploaded to a server and may disappear when the session ends or browser data is cleared. For a real shared database, a backend/API would be needed.</p>
+    <div class="progress"><div id="progressBar"></div></div>
+    <div class="row"><span id="answeredCount" class="muted">0 of 30 answered</span><span id="storageStatus" class="muted">Temporary result storage ready</span></div>
+  </section>
+  <form id="quizForm" class="panel">
+    <div id="questions"></div>
+    <div class="row no-print" style="margin-top:18px">
+      <button type="submit">Submit test and calculate result</button>
+      <button type="button" class="secondary" id="resetBtn">Clear answers</button>
+    </div>
+  </form>
+  <section id="resultPanel" class="panel hidden" aria-live="polite">
+    <h2>Your Result</h2><div id="resultSummary" class="result"></div>
+    <div class="row no-print" style="margin-top:14px">
+      <button type="button" id="reviewBtn" class="secondary">Show answer review</button>
+      <button type="button" id="newAttemptBtn">Start new attempt</button>
+      <button type="button" id="exportBtn" class="secondary">Download result JSON</button>
+      <button type="button" onclick="window.print()" class="secondary">Print result</button>
+    </div>
+    <div id="review" class="hidden" style="margin-top:15px"></div>
+  </section>
+  <section class="panel">
+    <h2>Temporary Results Database</h2>
+    <p class="muted">This table shows attempts stored temporarily in this browser session. It is local to this tab/session, not a permanent or central database.</p>
+    <div id="attemptsTable" class="muted">No submitted attempts yet.</div>
+    <div class="row no-print" style="margin-top:12px"><button type="button" class="secondary" id="clearHistoryBtn">Clear temporary result history</button></div>
+  </section>
+</main>
+<script>
+const quiz = [
+{q:"Simplify the ratio 8 : 12.",o:["2 : 3","3 : 2","4 : 6","8 : 4"],a:0,e:"Divide both terms by 4: 8 : 12 = 2 : 3."},
+{q:"Which ratio is equivalent to 4 : 7?",o:["8 : 14","8 : 12","12 : 14","7 : 4"],a:0,e:"Multiply both terms by 2: 4 : 7 = 8 : 14."},
+{q:"What is the total number of parts in the ratio 3 : 4 : 2?",o:["7","9","12","24"],a:1,e:"Add the terms: 3 + 4 + 2 = 9 parts."},
+{q:"Divide 45 in the ratio 2 : 3. What is the smaller share?",o:["18","20","27","30"],a:0,e:"Total parts = 5; one part = 45 ÷ 5 = 9; smaller share = 2 × 9 = 18."},
+{q:"Water and syrup are mixed in the ratio 5 : 2. If water is 20 cups, how much syrup is needed?",o:["4 cups","8 cups","10 cups","12 cups"],a:1,e:"5 parts = 20, so 1 part = 4. Syrup = 2 × 4 = 8 cups."},
+{q:"If 3 pencils cost ₹15, what is the cost of 1 pencil?",o:["₹3","₹5","₹8","₹12"],a:1,e:"Unit cost = ₹15 ÷ 3 = ₹5."},
+{q:"If 1 notebook costs ₹25, what do 6 notebooks cost?",o:["₹125","₹150","₹175","₹200"],a:1,e:"6 × ₹25 = ₹150."},
+{q:"If 4 kg of rice costs ₹240, what is the cost of 1 kg?",o:["₹40","₹50","₹60","₹80"],a:2,e:"₹240 ÷ 4 = ₹60 per kg."},
+{q:"Which is a direct proportion example?",o:["More workers take fewer days for a fixed job","More items at the same unit price cost more","Higher speed takes more time for a fixed distance","More taps take more time to fill a tank"],a:1,e:"At a fixed price per item, more items mean proportionally greater cost."},
+{q:"For a fixed journey, speed increases. What happens to travel time?",o:["It increases in the same ratio","It remains the same","It decreases","It becomes zero"],a:2,e:"For a fixed distance, speed and time are inversely proportional."},
+{q:"If 5 workers finish a job in 12 days, how many worker-days is the job?",o:["17","30","60","72"],a:2,e:"Worker-days = 5 × 12 = 60."},
+{q:"8 workers can complete a job in 6 days. How long would 12 workers take at the same rate?",o:["2 days","4 days","6 days","9 days"],a:1,e:"8 × 6 = 12 × x, so x = 48 ÷ 12 = 4 days."},
+{q:"3 identical taps fill a tank in 12 hours. How long would 6 taps take?",o:["3 hours","6 hours","12 hours","24 hours"],a:1,e:"3 × 12 = 6 × x, so x = 6 hours."},
+{q:"A car travels 180 km in 3 hours. What is its average speed?",o:["30 km/h","45 km/h","60 km/h","90 km/h"],a:2,e:"Speed = distance ÷ time = 180 ÷ 3 = 60 km/h."},
+{q:"A journey takes 4 hours at 50 km/h. How long will the same journey take at 100 km/h?",o:["1 hour","2 hours","4 hours","8 hours"],a:1,e:"Distance = 4 × 50 = 200 km; time = 200 ÷ 100 = 2 hours."},
+{q:"If 10 machines make a batch in 8 days, how many machines are needed to make it in 4 days?",o:["5","10","20","40"],a:2,e:"10 × 8 = x × 4, so x = 20 machines."},
+{q:"A complete pie chart represents:",o:["90°","180°","270°","360°"],a:3,e:"A full circle is 360°."},
+{q:"What angle represents one-half of a pie chart?",o:["45°","90°","180°","270°"],a:2,e:"1/2 × 360° = 180°."},
+{q:"What angle represents one-quarter of a pie chart?",o:["45°","60°","90°","120°"],a:2,e:"1/4 × 360° = 90°."},
+{q:"In a group of 40 students, 10 prefer football. What fraction prefer football?",o:["1/2","1/4","1/5","3/4"],a:1,e:"10/40 simplifies to 1/4."},
+{q:"In a pie chart, 15 out of 60 students choose music. What is the sector angle?",o:["45°","60°","90°","120°"],a:2,e:"15/60 × 360° = 90°."},
+{q:"A map scale says 1 cm represents 5 km. What does 7 cm represent?",o:["12 km","25 km","30 km","35 km"],a:3,e:"7 × 5 = 35 km."},
+{q:"On a map, 3 cm represents 24 km. What does 1 cm represent?",o:["6 km","8 km","12 km","21 km"],a:1,e:"24 ÷ 3 = 8 km per cm."},
+{q:"If 6 oranges cost ₹72, what do 10 oranges cost at the same rate?",o:["₹100","₹110","₹120","₹132"],a:2,e:"One orange costs ₹12; 10 cost ₹120."},
+{q:"A recipe for 4 people uses 200 g of flour. How much is needed for 10 people?",o:["400 g","450 g","500 g","600 g"],a:2,e:"Per person = 200 ÷ 4 = 50 g; for 10 = 500 g."},
+{q:"If 12 litres of juice are shared equally among 6 bottles, how much goes in each bottle?",o:["1 L","2 L","3 L","6 L"],a:1,e:"12 ÷ 6 = 2 litres per bottle."},
+{q:"Which equation shows direct proportion between x and y?",o:["xy = k","x/y = k","x + y = k","x − y = k"],a:1,e:"In direct proportion, the ratio x/y stays constant."},
+{q:"Which equation shows inverse proportion between x and y?",o:["x/y = k","x + y = k","xy = k","x − y = k"],a:2,e:"In inverse proportion, the product xy stays constant."},
+{q:"If x and y are inversely proportional and x doubles, y becomes:",o:["Twice as large","Three times as large","Half as large","Unchanged"],a:2,e:"To keep xy constant, doubling x halves y."},
+{q:"A job needs 36 worker-days. How many days will 9 workers take at the same rate?",o:["3 days","4 days","9 days","27 days"],a:1,e:"Days = 36 ÷ 9 = 4."}
+];
+const form=document.getElementById('quizForm');
+const qRoot=document.getElementById('questions');
+const resultPanel=document.getElementById('resultPanel');
+const resultSummary=document.getElementById('resultSummary');
+const review=document.getElementById('review');
+let latestResult=null;
+function renderQuestions(){
+ qRoot.innerHTML=quiz.map((item,i)=>`<fieldset class="q"><legend>${i+1}. ${item.q}</legend>${item.o.map((option,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${String.fromCharCode(65+j)}. ${option}</label>`).join('')}</fieldset>`).join('');
+ qRoot.querySelectorAll('input').forEach(el=>el.addEventListener('change',updateProgress));
+}
+function updateProgress(){
+ const count=quiz.filter((_,i)=>form.querySelector(`input[name="q${i}"]:checked`)).length;
+ document.getElementById('answeredCount').textContent=`${count} of ${quiz.length} answered`;
+ document.getElementById('progressBar').style.width=`${count/quiz.length*100}%`;
+}
+function readHistory(){try{return JSON.parse(sessionStorage.getItem('proportionalReasoningAttempts')||'[]')}catch(e){return []}}
+function saveHistory(list){try{sessionStorage.setItem('proportionalReasoningAttempts',JSON.stringify(list));document.getElementById('storageStatus').textContent='Saved in temporary browser session storage';return true}catch(e){document.getElementById('storageStatus').textContent='Session storage unavailable; result shown only on this page';return false}}
+function showHistory(){
+ const list=readHistory();const target=document.getElementById('attemptsTable');
+ if(!list.length){target.textContent='No submitted attempts yet.';return}
+ target.innerHTML='<table><thead><tr><th>Attempt</th><th>Time</th><th>Score</th><th>Percent</th></tr></thead><tbody>'+list.slice().reverse().map((r,i)=>`<tr><td>${list.length-i}</td><td>${r.time}</td><td>${r.score}/30</td><td>${r.percent}%</td></tr>`).join('')+'</tbody></table>';
+}
+form.addEventListener('submit',e=>{
+ e.preventDefault();
+ const missing=quiz.filter((_,i)=>!form.querySelector(`input[name="q${i}"]:checked`)).length;
+ if(missing && !confirm(`You have ${missing} unanswered question(s). Submit anyway?`)) return;
+ let score=0;
+ const responses=quiz.map((item,i)=>{const selected=form.querySelector(`input[name="q${i}"]:checked`);const chosen=selected?Number(selected.value):null;const correct=chosen===item.a;if(correct)score++;return {question:i+1,selected:chosen===null?null:item.o[chosen],correctAnswer:item.o[item.a],isCorrect:correct,explanation:item.e}});
+ latestResult={test:'Proportional Reasoning',time:new Date().toLocaleString(),score,total:quiz.length,percent:Math.round(score/quiz.length*100),responses};
+ const history=readHistory();history.push({time:latestResult.time,score,total:quiz.length,percent:latestResult.percent});saveHistory(history);showHistory();
+ resultSummary.innerHTML=`<div style="font-size:1.4rem">${score} / ${quiz.length} marks (${latestResult.percent}%)</div><div>${latestResult.percent>=80?'Excellent work!':latestResult.percent>=60?'Good effort — review the explanations for missed questions.':'Keep practising the fundamentals and try again.'}</div><div class="small" style="margin-top:6px">Attempt time: ${latestResult.time}</div>`;
+ resultPanel.classList.remove('hidden');review.classList.add('hidden');document.getElementById('reviewBtn').textContent='Show answer review';resultPanel.scrollIntoView({behavior:'smooth',block:'start'});
+});
+document.getElementById('reviewBtn').addEventListener('click',()=>{
+ const hidden=review.classList.toggle('hidden');document.getElementById('reviewBtn').textContent=hidden?'Show answer review':'Hide answer review';
+ if(!hidden && latestResult)review.innerHTML=latestResult.responses.map(r=>`<div class="q"><strong>Q${r.question}: ${r.isCorrect?'Correct':'Incorrect'}</strong><p>Your answer: ${r.selected===null?'Not answered':r.selected}</p><p>Correct answer: <strong>${r.correctAnswer}</strong></p><p class="muted">${r.explanation}</p></div>`).join('');
+});
+document.getElementById('newAttemptBtn').addEventListener('click',()=>{form.reset();latestResult=null;resultPanel.classList.add('hidden');review.innerHTML='';updateProgress();window.scrollTo({top:0,behavior:'smooth'})});
+document.getElementById('resetBtn').addEventListener('click',()=>{form.reset();updateProgress()});
+document.getElementById('exportBtn').addEventListener('click',()=>{
+ if(!latestResult)return;const blob=new Blob([JSON.stringify(latestResult,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='proportional_reasoning_test_result.json';a.click();URL.revokeObjectURL(url);
+});
+document.getElementById('clearHistoryBtn').addEventListener('click',()=>{if(confirm('Clear all temporary test results for this browser session?')){sessionStorage.removeItem('proportionalReasoningAttempts');showHistory();document.getElementById('storageStatus').textContent='Temporary result history cleared';}});
+renderQuestions();updateProgress();showHistory();
+</script>
+</body>
+</html>
